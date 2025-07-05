@@ -1,0 +1,32 @@
+{
+  "name": "mcp-plugin",
+  "version": "0.0.1",
+  "description": "A Blockbench plugin for MCP (Model Context Protocol) using Socket.IO",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.11.0",
+  "dependencies": {
+    "socket.io-client": "^4.8.1",
+    "@shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/socket.io-client": "^3.0.0",
+    "blockbench-types": "^4.12.2",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.2"
+  },
+  "blockbenchConfig": {
+    "title": "MCP Plugin",
+    "author": "enfpdev",
+    "icon": "icon.png",
+    "description": "A plugin for Blockbench to interact with MCP (Model Context Protocol) using Socket.IO.",
+    "has_changelog": true,
+    "variant": "both"
+  }
+}

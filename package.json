@@ -4,6 +4,8 @@
   "description": "",
   "private": true,
   "scripts": {
+    "postinstall": "node scripts/setup-lang.mjs",
+    "setup-lang": "node scripts/setup-lang.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "changeset": "changeset",
     "version": "changeset version",

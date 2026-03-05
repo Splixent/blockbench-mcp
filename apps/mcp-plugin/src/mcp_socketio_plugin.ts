@@ -2,8 +2,13 @@
 
 import { io } from "socket.io-client";
 import { ToolType } from "@shared/types";
+import { setLang, t, SupportedLang } from "@shared/i18n";
 
-// 전역 변수 선언
+declare const __LANG__: string;
+
+// Set language from build-time config
+setLang((__LANG__ || "en") as SupportedLang);
+
 let mcpPanel: Panel;
 let commandListElement: HTMLElement;
 const commandHistory: Array<{ timestamp: Date; type: 'sent' | 'received'; command: string; data?: any }> = [];
@@ -25,12 +30,11 @@ const options: PluginOptions = {
   onload: () => {
     const socket = io("http://localhost:9999");
 
-    // 커맨드 기록 HTML 업데이트 함수
     const updateCommandDisplay = () => {
       if (!commandListElement) return;
-      
+
       if (commandHistory.length === 0) {
-        commandListElement.innerHTML = '<div class="mcp-empty">아직 커맨드 기록이 없습니다.</div>';
+        commandListElement.innerHTML = `<div class="mcp-empty">${t("commandHistory.empty")}</div>`;
         return;
       }
 
@@ -38,9 +42,9 @@ const options: PluginOptions = {
         const timeStr = entry.timestamp.toLocaleTimeString();
         const typeIcon = entry.type === 'sent' ? '↗️' : '↙️';
         const typeClass = entry.type === 'sent' ? 'mcp-sent' : 'mcp-received';
-        const dataHtml = entry.data ? 
+        const dataHtml = entry.data ?
           `<div class="mcp-data">${JSON.stringify(entry.data, null, 2)}</div>` : '';
-        
+
         return `
           <div class="mcp-command-item ${typeClass}">
             <div class="mcp-time">${timeStr}</div>
@@ -54,15 +58,12 @@ const options: PluginOptions = {
       }).join('');
 
       commandListElement.innerHTML = commandsHtml;
-      
-      // 스크롤을 맨 아래로
       commandListElement.scrollTop = commandListElement.scrollHeight;
     };
 
-    // MCP 커맨드 기록 패널 생성
     mcpPanel = new Panel({
       id: 'mcp_command_history',
-      name: 'MCP 커맨드 기록',
+      name: t("commandHistory.title"),
       icon: 'history',
       growable: true,
       resizable: true,
@@ -80,11 +81,11 @@ const options: PluginOptions = {
         template: `
           <div class="mcp-command-history">
             <div class="mcp-header">
-              <h3>MCP 커맨드 기록</h3>
-              <div class="mcp-stats">총 ${commandHistory.length}개 커맨드</div>
+              <h3>${t("commandHistory.title")}</h3>
+              <div class="mcp-stats">${t("commandHistory.stats", commandHistory.length)}</div>
             </div>
             <div class="mcp-content" ref="commandList">
-              <div class="mcp-empty">아직 커맨드 기록이 없습니다.</div>
+              <div class="mcp-empty">${t("commandHistory.empty")}</div>
             </div>
           </div>
         `,
@@ -98,7 +99,6 @@ const options: PluginOptions = {
       }
     });
 
-    // 패널 스타일 추가
     const style = document.createElement('style');
     style.textContent = `
       .mcp-command-history {
@@ -178,12 +178,10 @@ const options: PluginOptions = {
     `;
     document.head.appendChild(style);
 
-    // 툴바에 패널 토글 버튼 추가
     new Action('mcp_toggle_panel', {
-      name: 'MCP 커맨드 패널 토글',
+      name: t("commandHistory.togglePanel"),
       icon: 'history',
       click: () => {
-        // 패널 표시/숨김 토글
         const panelElement = document.getElementById('panel_mcp_command_history');
         if (panelElement) {
           const isVisible = panelElement.style.display !== 'none';
@@ -192,18 +190,16 @@ const options: PluginOptions = {
       }
     });
 
-    // 커맨드 기록 업데이트 함수
     const updateCommandHistory = () => {
       updateCommandDisplay();
-      // 헤더의 통계 업데이트
       const statsElement = document.querySelector('.mcp-stats');
       if (statsElement) {
-        statsElement.textContent = `총 ${commandHistory.length}개 커맨드`;
+        statsElement.textContent = t("commandHistory.stats", commandHistory.length);
       }
     };
 
     socket.on("connect", () => {
-      console.log("[MCP Plugin] 연결됨");
+      console.log(`[MCP Plugin] ${t("plugin.connected")}`);
       commandHistory.push({
         timestamp: new Date(),
         type: 'sent',
@@ -230,7 +226,6 @@ const options: PluginOptions = {
       updateCommandHistory();
     });
 
-    // 소켓 이벤트 리스너 추가하여 모든 송수신 기록
     const originalEmit = socket.emit;
     socket.emit = function(event: string, ...args: any[]) {
       commandHistory.push({
@@ -243,7 +238,6 @@ const options: PluginOptions = {
       return originalEmit.call(this, event, ...args);
     };
 
-    // 주기적으로 패널 업데이트 (10초마다)
     setInterval(() => {
       if (commandHistory.length > 0) {
         updateCommandHistory();
@@ -251,27 +245,17 @@ const options: PluginOptions = {
     }, 10000);
   },
   onunload: () => {
-    // Action 정리
     if (BarItems.mcp_toggle_panel) {
       BarItems.mcp_toggle_panel.delete();
     }
-    // 패널 정리
     if (mcpPanel) {
       mcpPanel.delete();
     }
   },
-  /**
-   * Runs when the user manually installs the plugin
-   */
   oninstall: () => {},
-  /**
-   * Runs when the user manually uninstalls the plugin
-   */
   onuninstall: () => {},
 };
 
 (function () {
-  // let pluginSettings: Setting[];
-
   BBPlugin.register("mcp_socketio_plugin", options);
 })();

@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node -c scripts/setup-lang.mjs)"
+      "Bash(node -c scripts/setup-lang.mjs)",
+      "Bash(pnpm build)"
     ]
   }
 }

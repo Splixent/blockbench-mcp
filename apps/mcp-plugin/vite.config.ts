@@ -16,6 +16,11 @@ function getConfiguredLang(): string {
 }
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@shared': resolve(__dirname, '../../packages/shared/src'),
+    },
+  },
   define: {
     __LANG__: JSON.stringify(getConfiguredLang()),
   },

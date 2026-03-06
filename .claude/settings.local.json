@@ -2,7 +2,27 @@
   "permissions": {
     "allow": [
       "Bash(node -c scripts/setup-lang.mjs)",
-      "Bash(pnpm build)"
+      "Bash(pnpm build)",
+      "Bash(pnpm add @modelcontextprotocol/sdk zod)",
+      "Bash(pnpm add -D tsup)",
+      "Read(//Users/tomiokelana/**)",
+      "mcp__mcp-registry__search_mcp_registry",
+      "Bash(curl -s http://localhost:9999)",
+      "Bash(curl -s http://localhost:9999/health)",
+      "Bash(curl -s --max-time 5 http://localhost:9999/health)",
+      "Bash(curl -s --max-time 10 -X POST http://localhost:9999/api/tool -H \"Content-Type: application/json\" -d '{\"\"tool\"\":\"\"get_project_data\"\",\"\"input\"\":{}}')",
+      "Bash(curl -s --max-time 35 -X POST http://localhost:9999/api/tool -H \"Content-Type: application/json\" -d '{\"\"tool\"\":\"\"hello_world\"\",\"\"input\"\":{\"\"name\"\":\"\"test\"\"}}')",
+      "Bash(curl -s --max-time 15 -X POST http://localhost:9999/api/tool -H \"Content-Type: application/json\" -d '{\"\"tool\"\":\"\"get_project_data\"\",\"\"input\"\":{}}')",
+      "Bash(curl -s --max-time 15 -X POST http://localhost:9999/api/tool -H \"Content-Type: application/json\" -d '{:*)",
+      "Bash(node /tmp/improve-dog.mjs)",
+      "mcp__blockbench__get_project_data",
+      "Bash(lsof -i :9999 -P -n)",
+      "Bash(kill 76073 76071)",
+      "Bash(kill 78705 78703 78853 78852)",
+      "mcp__blockbench__modify_element",
+      "Bash(gh api users/Splixent)",
+      "Bash(gh api users/Splixent/repos --jq '.[] | {name, description, language, stargazers_count, fork, html_url, topics}')",
+      "Bash(gh api users/Splixent/repos --jq '[.[] | select\\(.fork == false\\) | .language] | group_by\\(.\\) | map\\({lang: .[0], count: length}\\) | sort_by\\(-.count\\)')"
     ]
   }
 }

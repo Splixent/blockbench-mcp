@@ -6,6 +6,8 @@
   "scripts": {
     "postinstall": "node scripts/setup-lang.mjs",
     "setup-lang": "node scripts/setup-lang.mjs",
+    "setup-claude": "node scripts/setup-claude.mjs",
+    "setup": "pnpm run build && node scripts/setup-claude.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "changeset": "changeset",
     "version": "changeset version",
